@@ -11,6 +11,7 @@ const car: ICar = {
   open: true,
   freeSeats: 3,
   isOpen() {
+    console.log(`Current fuel level is ${this.fuel}`);
     return this.open ? `Car is opened` : `Car is closed`;
   },
 };
@@ -21,4 +22,10 @@ function modifyCar(car: ICar): ICar {
   return car;
 }
 
-console.log(modifyCar(car).isOpen());
+function modifyFuel(car: ICar): ICar {
+  car.fuel = '110%';
+
+  return car;
+}
+
+console.log(modifyFuel(modifyCar(car)).isOpen());
