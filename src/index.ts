@@ -6,20 +6,25 @@ interface ICar {
   isOpen: () => string;
 }
 
-const car: ICar = {
-  fuel: '100%',
-  open: true,
-  freeSeats: 3,
+@modifyCar
+class Car implements ICar {
   isOpen() {
     console.log(`Current fuel level is ${this.fuel}`);
     return this.open ? `Car is opened` : `Car is closed`;
-  },
-};
+  }
+  constructor(
+    public fuel: string,
+    public open: boolean,
+    public freeSeats: number,
+  ) {}
+}
 
-function modifyCar(car: ICar): ICar {
-  car.open = false;
+const car: ICar = new Car('100%', true, 3);
 
-  return car;
+function modifyCar<T extends { new (...args: any[]): {} }>(constructor: T): T {
+  return class extends constructor {
+    open = false;
+  };
 }
 
 function modifyFuel(car: ICar): ICar {
@@ -28,4 +33,4 @@ function modifyFuel(car: ICar): ICar {
   return car;
 }
 
-console.log(modifyFuel(modifyCar(car)).isOpen());
+console.log(car.isOpen());
