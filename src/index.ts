@@ -7,7 +7,7 @@ interface ICar {
 }
 
 const car: ICar = {
-  fuel: "100%",
+  fuel: '100%',
   open: true,
   freeSeats: 3,
   isOpen() {
