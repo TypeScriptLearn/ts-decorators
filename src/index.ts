@@ -11,10 +11,9 @@ interface ICar {
 @changeDoorStatus(false)
 class Car implements ICar {
   isOpen() {
-    console.log(`Current fuel level is ${this.fuel}`);
-
     return this.open ? `Car is opened` : `Car is closed`;
   }
+
   constructor(
     public fuel: string,
     public open: boolean,
