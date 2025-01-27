@@ -12,6 +12,7 @@ interface ICar {
 class Car implements ICar {
   isOpen() {
     console.log(`Current fuel level is ${this.fuel}`);
+
     return this.open ? `Car is opened` : `Car is closed`;
   }
   constructor(
@@ -22,7 +23,8 @@ class Car implements ICar {
 }
 
 function changeDoorStatus(status: boolean) {
-  return <T extends { new (...args: any[]): {} }>(constructor: T): T => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <T extends { new (...args: any[]): object }>(constructor: T): T => {
     return class extends constructor {
       open = status;
     };
@@ -30,7 +32,8 @@ function changeDoorStatus(status: boolean) {
 }
 
 function changeFuelStatus(amount: number) {
-  return <T extends { new (...args: any[]): {} }>(constructor: T): T => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <T extends { new (...args: any[]): object }>(constructor: T): T => {
     return class extends constructor {
       fuel = `${amount}%`;
     };

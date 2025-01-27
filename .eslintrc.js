@@ -4,7 +4,11 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['plugin:@typescript-eslint/recommended', 'eslint:recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
   overrides: [],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
