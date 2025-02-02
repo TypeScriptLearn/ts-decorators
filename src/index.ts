@@ -3,15 +3,16 @@ interface ICar {
   open: boolean;
   freeSeats: number;
 
-  isOpen: () => string;
+  isOpen: (value: string) => string;
 }
 
 /** changeFuelStatus(changeDoorStatus(obj)) */
 @changeFuelStatus(110)
 @changeDoorStatus(false)
 class Car implements ICar {
-  isOpen() {
-    return this.open ? `Car is opened` : `Car is closed`;
+  @checkAmountOfFuel
+  isOpen(message: string): string {
+    return this.open ? `${message} is opened` : `${message} is closed`;
   }
 
   constructor(
@@ -19,6 +20,19 @@ class Car implements ICar {
     public open: boolean,
     public freeSeats: number,
   ) {}
+}
+
+function checkAmountOfFuel(
+  target: object,
+  propertyKey: string | symbol,
+  descriptor: PropertyDescriptor,
+): PropertyDescriptor | void {
+  const originValue = descriptor.value;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptor.value = function (this: any, ...args: any[]) {
+    console.log(this.fuel);
+    return originValue.apply(this, args);
+  };
 }
 
 function changeDoorStatus(status: boolean) {
@@ -41,4 +55,4 @@ function changeFuelStatus(amount: number) {
 
 const car: ICar = new Car('100%', true, 3);
 
-console.log(car.isOpen());
+console.log(car.isOpen('Car'));
