@@ -2,6 +2,7 @@ interface ICar {
   fuel: string;
   open: boolean;
   freeSeats: number;
+  errors?: string;
 
   isOpen: (value: string) => string;
 }
@@ -15,11 +16,46 @@ class Car implements ICar {
     return this.open ? `${message} is opened` : `${message} is closed`;
   }
 
+  @validateSeatsAmount(5)
+  freeSeats: number;
+
   constructor(
     public fuel: string,
     public open: boolean,
-    public freeSeats: number,
-  ) {}
+    freeSeats: number,
+  ) {
+    this.freeSeats = freeSeats;
+  }
+}
+
+function validateSeatsAmount(limit: number) {
+  return function (target: object, propertyKey: string | symbol) {
+    const symbol = Symbol();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const get = function (this: any): number {
+      return this[symbol];
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const set = function (this: any, newValue: number): void {
+      if (newValue >= 1 && newValue < limit) {
+        this[symbol] = newValue;
+      } else {
+        Object.defineProperty(target, 'errors', {
+          value: `Error! Seats more than ${limit}.`,
+          writable: false,
+          enumerable: true,
+          configurable: false,
+        });
+      }
+    };
+
+    Object.defineProperty(target, propertyKey, {
+      get,
+      set,
+    });
+  };
 }
 
 function checkAmountOfFuel(
@@ -53,6 +89,7 @@ function changeFuelStatus(amount: number) {
   };
 }
 
-const car: ICar = new Car('100%', true, 3);
+const car: ICar = new Car('100%', true, 5);
 
 console.log(car.isOpen('Car'));
+console.log(car.errors);
