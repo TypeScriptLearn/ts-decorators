@@ -2,6 +2,7 @@ interface ICar {
   fuel: string;
   open: boolean;
   freeSeats: number;
+  weight: number;
   errors?: string;
 
   isOpen: (value: string) => string;
@@ -19,6 +20,17 @@ class Car implements ICar {
   @validateSeatsAmount(5)
   freeSeats: number;
 
+  _weight = 1000;
+
+  @accessorDecorator
+  set weight(value: number) {
+    this._weight = this._weight + value;
+  }
+
+  get weight(): number {
+    return this._weight;
+  }
+
   constructor(
     public fuel: string,
     public open: boolean,
@@ -26,6 +38,25 @@ class Car implements ICar {
   ) {
     this.freeSeats = freeSeats;
   }
+}
+
+function accessorDecorator(
+  _: object,
+  __: string | symbol,
+  descriptor: PropertyDescriptor,
+): PropertyDescriptor | void {
+  const originalSet = descriptor.set;
+  const originalGet = descriptor.get;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptor.set = function (this: any, ...args: any) {
+    console.log(`Изменяем значение на ${[...args]}`);
+    return originalSet?.apply(this, args);
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptor.get = function (this: any) {
+    console.log('Это геттер');
+    return originalGet?.apply(this);
+  };
 }
 
 function validateSeatsAmount(limit: number) {
@@ -91,5 +122,5 @@ function changeFuelStatus(amount: number) {
 
 const car: ICar = new Car('100%', true, 5);
 
-console.log(car.isOpen('Car'));
-console.log(car.errors);
+car.weight = 300;
+console.log(car.weight);
